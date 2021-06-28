@@ -1,4 +1,5 @@
 import React from 'react';
+import './FormComponent.css';
 
 class FormComponent extends React.Component {
     constructor(props) {
@@ -7,7 +8,9 @@ class FormComponent extends React.Component {
         this.state = {
             iniciado: false,
             error: false,
-            mensaje: ''
+            mensaje: '',
+            tiempoInicial: 0,
+            tiempoTranscurrido: 0,
         };
 
         this.handleClick = this.handleClick.bind(this);
@@ -17,6 +20,8 @@ class FormComponent extends React.Component {
     handleClick() {
         this.setState({
             iniciado: true,
+            tiempoInicial: Date.now(),
+            tiempoTranscurrido: 0,
         })
     }
 
@@ -38,13 +43,23 @@ class FormComponent extends React.Component {
         this.setState({
             mensaje: mensaje,
             error: error,
+            tiempoTranscurrido: (Date.now() - this.state.tiempoInicial) / 1000,
         })
+    }
+
+    getMensaje() {
+        return (
+            this.state.mensaje !== '' &&
+            <h2 className={this.state.error ? 'error' : ''}>
+                {this.state.mensaje} Llevas {this.state.tiempoTranscurrido} segundos
+            </h2>
+        )
     }
 
     render() {
         return (
             <div className="form-component">
-                <h2>{this.state.mensaje}</h2>
+                {this.getMensaje()}
                 <input
                     disabled={this.state.iniciado ? '' : 'disabled'}
                     onChange={this.handleChange}
